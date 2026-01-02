@@ -141,6 +141,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
+          {/* COMMENTED OUT - Contact form section
           <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-xl p-6 md:p-8 card-glow">
             <h3 className="text-2xl font-bold text-gradient-gold mb-6">📧 Send Us a Message</h3>
             
@@ -204,6 +205,7 @@ const Contact = () => {
               </p>
             </form>
           </div>
+          */
         </div>
 
         {/* Quick Links */}

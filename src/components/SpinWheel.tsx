@@ -26,11 +26,23 @@ const SpinWheel = ({ onClose, onRewardClaimed }: SpinWheelProps) => {
     // Check if user already spun today (based on calendar day, not 24h)
     const checkSpinStatus = async () => {
       try {
+        const now = new Date();
+        
+        // Check if today is Sunday (day 0) - scratch cards not available on Sundays
+        if (now.getDay() === 0) {
+          setAlreadySpun(true);
+          // Set next spin time to Monday midnight
+          const nextMonday = new Date(now);
+          nextMonday.setHours(0, 0, 0, 0);
+          nextMonday.setDate(nextMonday.getDate() + 1);
+          setNextSpinTime(nextMonday);
+          return;
+        }
+        
         const response = await authAPI.getProfile();
         const lastSpinTime = response.data.spinWheelLastUsed;
         
         if (lastSpinTime) {
-          const now = new Date();
           const lastSpin = new Date(lastSpinTime);
           
           // Calculate start of today (midnight)

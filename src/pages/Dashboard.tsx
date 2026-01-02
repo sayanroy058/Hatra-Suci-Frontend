@@ -60,12 +60,24 @@ const Dashboard = () => {
   }, [nextSpinTime]);
 
   const checkSpinStatus = (spinWheelLastUsed: any) => {
+    const now = new Date();
+    
+    // Check if today is Sunday (day 0) - scratch cards not available on Sundays
+    if (now.getDay() === 0) {
+      setCanSpin(false);
+      // Set next spin time to Monday midnight
+      const nextMonday = new Date(now);
+      nextMonday.setHours(0, 0, 0, 0);
+      nextMonday.setDate(nextMonday.getDate() + 1);
+      setNextSpinTime(nextMonday);
+      return;
+    }
+    
     if (!spinWheelLastUsed) {
       setCanSpin(true);
       return;
     }
 
-    const now = new Date();
     const lastSpin = new Date(spinWheelLastUsed);
     
     // Calculate start of today (midnight)
