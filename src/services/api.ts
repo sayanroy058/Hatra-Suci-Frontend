@@ -1,10 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 
-// Auto-detect API URL for Codespaces or local development
-const API_URL = import.meta.env.VITE_API_URL || 
-  (window.location.hostname.includes('github.dev') 
+// Auto-detect API URL for Codespaces or local development.
+// Use a relative `/api` by default in production so the frontend can
+// proxy requests through the same origin (avoids CORS). For local
+// development we still allow overriding via `VITE_API_URL`.
+const API_URL = import.meta.env.VITE_API_URL ||
+  (window.location.hostname.includes('github.dev')
     ? window.location.origin.replace(/-8080/, '-5000') + '/api'
-    : 'https://hatra-suci-backend.vercel.app/api');
+    : '/api');
 
 // Create axios instance
 const api = axios.create({

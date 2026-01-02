@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://hatra-suci-backend.vercel.app/api/$1"
+    }
+  ]
+}
