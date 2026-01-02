@@ -262,59 +262,59 @@ const Index = () => {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 px-4 border-t border-border bg-card/50">
+        <footer className="py-8 sm:py-12 px-4 border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <h3 className="text-xl font-bold text-gradient-gold mb-4">Hatra Suci</h3>
-                <p className="text-sm text-muted-foreground">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+              <div className="text-center sm:text-left">
+                <h3 className="text-lg sm:text-xl font-bold text-gradient-gold mb-3 sm:mb-4">Hatra Suci</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Indonesia's trusted global enterprise in natural resources and blockchain finance.
                 </p>
               </div>
 
-              <div>
-                <h4 className="font-semibold mb-4">Company</h4>
+              <div className="text-center sm:text-left">
+                <h4 className="font-semibold mb-3 sm:mb-4">Company</h4>
                 <div className="space-y-2">
-                  <button onClick={() => navigate('/about')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/about')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     About Us
                   </button>
-                  <button onClick={() => navigate('/ceo')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/ceo')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Leadership
                   </button>
-                  <button onClick={() => navigate('/contact')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/contact')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Contact
                   </button>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-semibold mb-4">Platform</h4>
+              <div className="text-center sm:text-left">
+                <h4 className="font-semibold mb-3 sm:mb-4">Platform</h4>
                 <div className="space-y-2">
-                  <button onClick={() => navigate('/login')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/login')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Login
                   </button>
-                  <button onClick={() => navigate('/register')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/register')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Register
                   </button>
-                  <button onClick={() => navigate('/dashboard')} className="block text-sm text-muted-foreground hover:text-primary">
+                  <button onClick={() => navigate('/dashboard')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     Dashboard
                   </button>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-semibold mb-4">Contact</h4>
-                <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="text-center sm:text-left">
+                <h4 className="font-semibold mb-3 sm:mb-4">Contact</h4>
+                <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                   <p>Jakarta, Indonesia</p>
-                  <p>support@hatrasuci.co.id</p>
-                  <a href="https://t.me/HatraSuciSupport" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">
+                  <p className="break-words">support@hatrasuci.co.id</p>
+                  <a href="https://t.me/HatraSuciSupport" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline transition-colors">
                     Telegram Support
                   </a>
                 </div>
               </div>
             </div>
 
-            <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
+            <div className="pt-6 sm:pt-8 border-t border-border text-center text-xs sm:text-sm text-muted-foreground">
               <p>© 2025 Hatra Suci. All rights reserved.</p>
             </div>
           </div>
