@@ -57,6 +57,9 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, [navigate]);
 
+  // Fetch dashboard data from the backend
+  // Limit recent activity to last 5 items by requesting 5 from the backend
+
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
@@ -65,7 +68,7 @@ const AdminDashboard = () => {
       console.log('Fetching dashboard data...');
       const [statsRes, transactionsRes] = await Promise.all([
         adminAPI.getDashboardStats(),
-        adminAPI.getRecentTransactions(10)
+        adminAPI.getRecentTransactions(5)
       ]);
 
       console.log('Stats:', statsRes.data);
@@ -73,7 +76,7 @@ const AdminDashboard = () => {
 
       setStats(statsRes.data);
       
-      // Map recent transactions (no need to slice, already limited to 10)
+      // Map recent transactions (already limited by backend request)
       const recent = transactionsRes.data.map((tx: any) => ({
         id: tx._id || 'unknown',
         type: tx.type || 'unknown',
