@@ -81,6 +81,41 @@
   html {
     @apply dark;
   }
+
+  /* Force mobile-only layout */
+  #root {
+    max-width: 430px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Override all Tailwind responsive breakpoints to maintain mobile layout */
+  @media (min-width: 768px) {
+    .md\:hidden {
+      display: block !important;
+    }
+    .md\:block, .md\:flex, .md\:grid, .md\:inline-block, .md\:inline-flex, .md\:table, .md\:inline {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .lg\:hidden {
+      display: block !important;
+    }
+    .lg\:block, .lg\:flex, .lg\:grid, .lg\:inline-block, .lg\:inline-flex, .lg\:table, .lg\:inline {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .xl\:hidden {
+      display: block !important;
+    }
+    .xl\:block, .xl\:flex, .xl\:grid, .xl\:inline-block, .xl\:inline-flex, .xl\:table, .xl\:inline {
+      display: none !important;
+    }
+  }
 }
 
 @layer components {
