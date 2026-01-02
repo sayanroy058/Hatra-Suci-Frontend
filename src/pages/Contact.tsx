@@ -140,72 +140,12 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
-          {/* COMMENTED OUT - Contact form section
+          {/* Contact Form - DISABLED */}
+          {/* 
           <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-xl p-6 md:p-8 card-glow">
-            <h3 className="text-2xl font-bold text-gradient-gold mb-6">📧 Send Us a Message</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Full Name</label>
-                <Input 
-                  type="text" 
-                  placeholder="Enter your name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
-                <Input 
-                  type="email" 
-                  placeholder="your.email@example.com"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Phone Number</label>
-                <Input 
-                  type="tel" 
-                  placeholder="+62 XXX XXXX XXXX"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Subject</label>
-                <Input 
-                  type="text" 
-                  placeholder="What is this regarding?"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Message</label>
-                <Textarea 
-                  placeholder="Tell us how we can help you..."
-                  className="min-h-[120px] resize-none"
-                  required
-                />
-              </div>
-
-              <Button 
-                type="submit" 
-                variant="gold" 
-                size="lg"
-                className="w-full"
-              >
-                <Send className="w-4 h-4 mr-2" />
-                Send Message
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center">
-                We typically respond within 24-48 hours
-              </p>
-            </form>
+            Contact form has been disabled
           </div>
-          */
+          */}
         </div>
 
         {/* Quick Links */}
