@@ -268,8 +268,8 @@ const AdminUsers = () => {
         </div>
       </Card>
 
-      {/* Users Table */}
-      <Card className="bg-card/90 backdrop-blur-sm border-2 border-border card-glow overflow-hidden">
+      {/* Users Table - Desktop */}
+      <Card className="hidden md:block bg-card/90 backdrop-blur-sm border-2 border-border card-glow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -355,6 +355,8 @@ const AdminUsers = () => {
           </table>
         </div>
 
+        </div>
+
         {/* Pagination */}
         <div className="flex items-center justify-between px-4 py-3 border-t border-border">
           <p className="text-sm text-muted-foreground">
@@ -381,6 +383,111 @@ const AdminUsers = () => {
           </div>
         </div>
       </Card>
+
+      {/* Users Cards - Mobile */}
+      <div className="md:hidden space-y-4">
+        {filteredUsers.map((user) => (
+          <Card key={user.id} className="p-4 bg-card/90 backdrop-blur-sm border-2 border-border card-glow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-semibold truncate">{user.username}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  <div className="mt-1">{getStatusBadge(user.status)}</div>
+                </div>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleViewUser(user)}>
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Details
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleCreditBonus(user)}>
+                    <DollarSign className="w-4 h-4 mr-2" />
+                    Credit Bonus
+                  </DropdownMenuItem>
+                  {user.status !== 'active' && (
+                    <DropdownMenuItem onClick={() => handleActivateUser(user)}>
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Activate User
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem 
+                    onClick={() => handleBanUser(user)}
+                    className={user.status === 'banned' ? 'text-green-500' : 'text-red-500'}
+                  >
+                    <Ban className="w-4 h-4 mr-2" />
+                    {user.status === 'banned' ? 'Unban User' : 'Ban User'}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="bg-secondary/50 rounded-lg p-2">
+                <p className="text-xs text-muted-foreground mb-1">Balance</p>
+                <p className="font-semibold text-primary">${user.balance.toLocaleString()}</p>
+              </div>
+              <div className="bg-secondary/50 rounded-lg p-2">
+                <p className="text-xs text-muted-foreground mb-1">Level</p>
+                <span className="bg-accent/20 text-accent px-2 py-0.5 rounded-full text-xs font-medium inline-block">
+                  Level {user.level}
+                </span>
+              </div>
+              <div className="bg-secondary/50 rounded-lg p-2">
+                <p className="text-xs text-muted-foreground mb-1">Referrals</p>
+                <div className="flex items-center gap-1">
+                  <Users className="w-3 h-3 text-muted-foreground" />
+                  <span className="font-semibold">{user.referrals}</span>
+                </div>
+              </div>
+              <div className="bg-secondary/50 rounded-lg p-2">
+                <p className="text-xs text-muted-foreground mb-1">Joined</p>
+                <p className="text-xs font-medium">{user.joinDate}</p>
+              </div>
+            </div>
+          </Card>
+        ))}
+
+        {/* Mobile Pagination */}
+        <Card className="p-4 bg-card/90 backdrop-blur-sm border-2 border-border">
+          <div className="flex flex-col gap-3">
+            <p className="text-sm text-muted-foreground text-center">
+              Page {currentPage} of {totalPages} • {filteredUsers.length} results
+            </p>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                size="sm" 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Previous
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
 
       {/* User Details Modal */}
       <Dialog open={showUserModal} onOpenChange={setShowUserModal}>

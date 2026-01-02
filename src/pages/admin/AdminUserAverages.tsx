@@ -189,7 +189,8 @@ const AdminUserAverages = () => {
             </div>
           ) : (
             <>
-              <div className="rounded-lg border border-border overflow-hidden">
+              {/* Desktop Table */}
+              <div className="hidden md:block rounded-lg border border-border overflow-hidden">
                 <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
@@ -263,6 +264,70 @@ const AdminUserAverages = () => {
                   ))}
                 </TableBody>
               </Table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
+              {users.map((user) => (
+                <Card key={user.userId} className="p-4 bg-secondary/30 border border-border">
+                  <div className="mb-3">
+                    <p className="font-semibold text-base truncate">{user.username}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <TrendingUp className="w-3 h-3 text-green-500" />
+                        <p className="text-xs text-muted-foreground">Deposits</p>
+                      </div>
+                      <p className="font-semibold text-sm text-green-500">
+                        ${user.depositsLast30.toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <TrendingDown className="w-3 h-3 text-red-500" />
+                        <p className="text-xs text-muted-foreground">Withdrawals</p>
+                      </div>
+                      <p className="font-semibold text-sm text-red-500">
+                        ${user.withdrawalsLast30.toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <Gift className="w-3 h-3 text-purple-500" />
+                        <p className="text-xs text-muted-foreground">Bonuses</p>
+                      </div>
+                      <p className="font-semibold text-sm text-purple-500">
+                        ${user.bonusesLast30.toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="bg-primary/10 border border-primary/30 rounded-lg p-2">
+                      <div className="flex items-center gap-1 mb-1">
+                        <DollarSign className="w-3 h-3 text-primary" />
+                        <p className="text-xs text-muted-foreground">Available</p>
+                      </div>
+                      <p className={`font-semibold text-sm ${user.availableLast30 >= 0 ? 'text-primary' : 'text-red-500'}`}>
+                        ${user.availableLast30.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Delta/Day</p>
+                      <p className={`font-mono text-sm font-semibold ${user.deltaPerDay >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {user.deltaPerDay >= 0 ? '+' : ''}{user.deltaPerDay.toFixed(2)}
+                      </p>
+                    </div>
+                    {getStatusBadge(user.availableLast30)}
+                  </div>
+                </Card>
+              ))}
             </div>
 
             {/* Pagination Controls */}

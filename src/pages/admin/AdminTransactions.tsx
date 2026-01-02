@@ -223,7 +223,7 @@ const AdminTransactions = () => {
         </div>
       </Card>
 
-      {/* Transactions List */}
+      {/* Transactions List - Desktop */}
       {filteredTransactions.length === 0 ? (
         <Card className="p-12 text-center bg-card/90 backdrop-blur-sm border-2 border-border">
           <Activity className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
@@ -235,63 +235,113 @@ const AdminTransactions = () => {
           </p>
         </Card>
       ) : (
-        <Card className="bg-card/90 backdrop-blur-sm border-2 border-border">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-border">
-                <tr>
-                  <th className="text-left p-4 font-semibold">User</th>
-                  <th className="text-left p-4 font-semibold">Type</th>
-                  <th className="text-left p-4 font-semibold">Amount</th>
-                  <th className="text-left p-4 font-semibold">Status</th>
-                  <th className="text-left p-4 font-semibold">Date</th>
-                  <th className="text-left p-4 font-semibold">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTransactions.map((tx, index) => (
-                  <tr 
-                    key={tx._id} 
-                    className={`border-b border-border hover:bg-muted/50 transition-colors ${index % 2 === 0 ? 'bg-background/30' : ''}`}
-                  >
-                    <td className="p-4">
-                      <div>
-                        <p className="font-semibold">{tx.user.username}</p>
-                        <p className="text-xs text-muted-foreground">{tx.user.email}</p>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        {getTransactionIcon(tx.type)}
-                        {getTypeBadge(tx.type)}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className={`font-bold ${
-                        tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward'
-                          ? 'text-green-500' 
-                          : 'text-red-500'
-                      }`}>
-                        {tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward' ? '+' : '-'}
-                        ${tx.amount.toFixed(2)}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      {getStatusBadge(tx.status)}
-                    </td>
-                    <td className="p-4">
+        <>
+          {/* Desktop Table */}
+          <Card className="hidden md:block bg-card/90 backdrop-blur-sm border-2 border-border">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-border">
+                  <tr>
+                    <th className="text-left p-4 font-semibold">User</th>
+                    <th className="text-left p-4 font-semibold">Type</th>
+                    <th className="text-left p-4 font-semibold">Amount</th>
+                    <th className="text-left p-4 font-semibold">Status</th>
+                    <th className="text-left p-4 font-semibold">Date</th>
+                    <th className="text-left p-4 font-semibold">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTransactions.map((tx, index) => (
+                    <tr 
+                      key={tx._id} 
+                      className={`border-b border-border hover:bg-muted/50 transition-colors ${index % 2 === 0 ? 'bg-background/30' : ''}`}
+                    >
+                      <td className="p-4">
+                        <div>
+                          <p className="font-semibold">{tx.user.username}</p>
+                          <p className="text-xs text-muted-foreground">{tx.user.email}</p>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          {getTransactionIcon(tx.type)}
+                          {getTypeBadge(tx.type)}
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className={`font-bold ${
+                          tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward'
+                            ? 'text-green-500' 
+                            : 'text-red-500'
+                        }`}>
+                          {tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward' ? '+' : '-'}
+                          ${tx.amount.toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        {getStatusBadge(tx.status)}
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm">{new Date(tx.createdAt).toLocaleDateString()}</p>
+                        <p className="text-xs text-muted-foreground">{new Date(tx.createdAt).toLocaleTimeString()}</p>
+                      </td>
+                      <td className="p-4 text-sm text-muted-foreground">
+                        {tx.description || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-3">
+            {filteredTransactions.map((tx) => (
+              <Card key={tx._id} className="p-4 bg-card/90 backdrop-blur-sm border-2 border-border">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className="p-2 rounded-lg bg-secondary/50 flex-shrink-0">
+                      {getTransactionIcon(tx.type)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold truncate">{tx.user.username}</p>
+                      <p className="text-xs text-muted-foreground truncate">{tx.user.email}</p>
+                      <div className="mt-1">{getTypeBadge(tx.type)}</div>
+                    </div>
+                  </div>
+                  <span className={`font-bold text-lg flex-shrink-0 ml-2 ${
+                    tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward'
+                      ? 'text-green-500' 
+                      : 'text-red-500'
+                  }`}>
+                    {tx.type === 'deposit' || tx.type === 'bonus' || tx.type === 'referral' || tx.type === 'daily_reward' || tx.type === 'level_reward' ? '+' : '-'}
+                    ${tx.amount.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Status:</span>
+                    {getStatusBadge(tx.status)}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Date:</span>
+                    <div className="text-right">
                       <p className="text-sm">{new Date(tx.createdAt).toLocaleDateString()}</p>
                       <p className="text-xs text-muted-foreground">{new Date(tx.createdAt).toLocaleTimeString()}</p>
-                    </td>
-                    <td className="p-4 text-sm text-muted-foreground">
-                      {tx.description || '-'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                  {tx.description && (
+                    <div className="pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground">{tx.description}</p>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            ))}
           </div>
-        </Card>
+        </>
       )}
     </AdminLayout>
   );
