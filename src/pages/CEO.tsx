@@ -27,7 +27,7 @@ const CEO = () => {
           <img 
             src="/headquarters.png" 
             alt="Hatra Suci Headquarters - Jl. Jenderal Sudirman, Jakarta" 
-            className="w-full h-auto max-h-[500px] object-cover"
+            className="w-full h-auto object-contain"
           />
         </div>
 
