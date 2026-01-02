@@ -44,53 +44,51 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <div className="max-w-[430px] mx-auto bg-background min-h-screen">
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/ceo" element={<CEO />} />
-            <Route path="/contact" element={<Contact />} />
-            
-            {/* Status Pages */}
-            <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="/registrations-closed" element={<RegistrationsClosed />} />
-            <Route path="/deposits-disabled" element={<DepositsDisabled />} />
-            <Route path="/withdrawals-disabled" element={<WithdrawalsDisabled />} />
-            
-            {/* Protected User Routes */}
-            <Route path="/registration-deposit" element={<ProtectedRoute><RegistrationDeposit /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/deposit" element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
-            <Route path="/withdraw" element={<ProtectedRoute><Withdraw /></ProtectedRoute>} />
-            <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} />
-            <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
-            <Route path="/transactions" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
-            
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-            <Route path="/admin/registration-verification" element={<AdminRoute><RegistrationVerification /></AdminRoute>} />
-            <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-            <Route path="/admin/deposits" element={<AdminRoute><AdminDeposits /></AdminRoute>} />
-            <Route path="/admin/withdrawals" element={<AdminRoute><AdminWithdrawals /></AdminRoute>} />
-            <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
-            <Route path="/admin/bonus" element={<AdminRoute><AdminBonus /></AdminRoute>} />
-            <Route path="/admin/finance-overview" element={<AdminRoute><AdminFinanceOverview /></AdminRoute>} />
-            <Route path="/admin/user-averages" element={<AdminRoute><AdminUserAverages /></AdminRoute>} />
-            <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
-            <Route path="/admin/create-admin" element={<AdminRoute><AdminCreate /></AdminRoute>} />
-            <Route path="/admin/user-limit" element={<AdminRoute><AdminUserLimit /></AdminRoute>} />
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/ceo" element={<CEO />} />
+          <Route path="/contact" element={<Contact />} />
+          
+          {/* Status Pages */}
+          <Route path="/maintenance" element={<Maintenance />} />
+          <Route path="/registrations-closed" element={<RegistrationsClosed />} />
+          <Route path="/deposits-disabled" element={<DepositsDisabled />} />
+          <Route path="/withdrawals-disabled" element={<WithdrawalsDisabled />} />
+          
+          {/* Protected User Routes */}
+          <Route path="/registration-deposit" element={<ProtectedRoute><RegistrationDeposit /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/deposit" element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
+          <Route path="/withdraw" element={<ProtectedRoute><Withdraw /></ProtectedRoute>} />
+          <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} />
+          <Route path="/rewards" element={<ProtectedRoute><Rewards /></ProtectedRoute>} />
+          <Route path="/transactions" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/registration-verification" element={<AdminRoute><RegistrationVerification /></AdminRoute>} />
+          <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          <Route path="/admin/deposits" element={<AdminRoute><AdminDeposits /></AdminRoute>} />
+          <Route path="/admin/withdrawals" element={<AdminRoute><AdminWithdrawals /></AdminRoute>} />
+          <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
+          <Route path="/admin/bonus" element={<AdminRoute><AdminBonus /></AdminRoute>} />
+          <Route path="/admin/finance-overview" element={<AdminRoute><AdminFinanceOverview /></AdminRoute>} />
+          <Route path="/admin/user-averages" element={<AdminRoute><AdminUserAverages /></AdminRoute>} />
+          <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
+          <Route path="/admin/create-admin" element={<AdminRoute><AdminCreate /></AdminRoute>} />
+          <Route path="/admin/user-limit" element={<AdminRoute><AdminUserLimit /></AdminRoute>} />
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
