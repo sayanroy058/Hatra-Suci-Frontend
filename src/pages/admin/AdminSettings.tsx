@@ -497,7 +497,7 @@ const AdminSettings = () => {
         </Card>
 
         {/* Notification Settings */}
-        <Card className="p-6 bg-card/90 backdrop-blur-sm border-2 border-border card-glow">
+        {/* <Card className="p-6 bg-card/90 backdrop-blur-sm border-2 border-border card-glow">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 rounded-lg bg-purple-500/20">
               <Bell className="w-5 h-5 text-purple-500" />
@@ -528,7 +528,7 @@ const AdminSettings = () => {
               />
             </div>
           </div>
-        </Card>
+        </Card> */}
 
         {/* Contact Settings */}
         <Card className="p-6 bg-card/90 backdrop-blur-sm border-2 border-border card-glow">
