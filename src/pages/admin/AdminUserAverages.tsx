@@ -29,11 +29,11 @@ interface UserAverage {
   userId: string;
   username: string;
   email: string;
-  depositsLast30: number;
-  withdrawalsLast30: number;
-  bonusesLast30: number;
-  availableLast30: number;
-  deltaPerDay: number;
+  daysConsidered: number;
+  depositsLastPeriod: number;
+  withdrawalsLastPeriod: number;
+  bonusesLastPeriod: number;
+  averagePerDay: number;
 }
 
 const AdminUserAverages = () => {
@@ -66,27 +66,6 @@ const AdminUserAverages = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getStatusBadge = (value: number) => {
-    if (value > 0) {
-      return (
-        <Badge className="bg-green-500/20 text-green-500 border-green-500/30">
-          Positive
-        </Badge>
-      );
-    } else if (value < 0) {
-      return (
-        <Badge className="bg-red-500/20 text-red-500 border-red-500/30">
-          Negative
-        </Badge>
-      );
-    }
-    return (
-      <Badge className="bg-gray-500/20 text-gray-500 border-gray-500/30">
-        Neutral
-      </Badge>
-    );
   };
 
   if (loading) {
@@ -143,7 +122,7 @@ const AdminUserAverages = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Avg Deposits</p>
                 <h3 className="text-2xl font-bold text-green-500">
-                  ${users.length > 0 ? (users.reduce((sum, u) => sum + u.depositsLast30, 0) / users.length).toFixed(2) : '0.00'}
+                  ${users.length > 0 ? (users.reduce((sum, u) => sum + (u.depositsLastPeriod || 0), 0) / users.length).toFixed(2) : '0.00'}
                 </h3>
               </div>
             </div>
@@ -155,7 +134,7 @@ const AdminUserAverages = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Avg Withdrawals</p>
                 <h3 className="text-2xl font-bold text-red-500">
-                  ${users.length > 0 ? (users.reduce((sum, u) => sum + u.withdrawalsLast30, 0) / users.length).toFixed(2) : '0.00'}
+                  ${users.length > 0 ? (users.reduce((sum, u) => sum + (u.withdrawalsLastPeriod || 0), 0) / users.length).toFixed(2) : '0.00'}
                 </h3>
               </div>
             </div>
@@ -167,7 +146,7 @@ const AdminUserAverages = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Avg Bonuses</p>
                 <h3 className="text-2xl font-bold text-purple-500">
-                  ${users.length > 0 ? (users.reduce((sum, u) => sum + u.bonusesLast30, 0) / users.length).toFixed(2) : '0.00'}
+                  ${users.length > 0 ? (users.reduce((sum, u) => sum + (u.bonusesLastPeriod || 0), 0) / users.length).toFixed(2) : '0.00'}
                 </h3>
               </div>
             </div>
@@ -195,6 +174,7 @@ const AdminUserAverages = () => {
                 <TableHeader>
                   <TableRow className="bg-muted/50">
                     <TableHead>User</TableHead>
+                    <TableHead className="text-right">Days</TableHead>
                     <TableHead className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <TrendingUp className="w-4 h-4 text-green-500" />
@@ -216,11 +196,9 @@ const AdminUserAverages = () => {
                     <TableHead className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <DollarSign className="w-4 h-4 text-primary" />
-                        Available
+                        Avg/Day
                       </div>
                     </TableHead>
-                    <TableHead className="text-right">Delta/Day</TableHead>
-                    <TableHead className="text-center">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -233,32 +211,29 @@ const AdminUserAverages = () => {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
+                        <span className="font-semibold">
+                          {user.daysConsidered || 0}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
                         <span className="font-semibold text-green-500">
-                          ${user.depositsLast30.toFixed(2)}
+                          ${(user.depositsLastPeriod || 0).toFixed(2)}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
                         <span className="font-semibold text-red-500">
-                          ${user.withdrawalsLast30.toFixed(2)}
+                          ${(user.withdrawalsLastPeriod || 0).toFixed(2)}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
                         <span className="font-semibold text-purple-500">
-                          ${user.bonusesLast30.toFixed(2)}
+                          ${(user.bonusesLastPeriod || 0).toFixed(2)}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
-                        <span className={`font-bold ${user.availableLast30 >= 0 ? 'text-primary' : 'text-red-500'}`}>
-                          ${user.availableLast30.toFixed(2)}
+                        <span className="font-bold text-primary">
+                          ${(user.averagePerDay || 0).toFixed(2)}
                         </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <span className={`font-mono text-sm ${user.deltaPerDay >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          {user.deltaPerDay >= 0 ? '+' : ''}{user.deltaPerDay.toFixed(2)}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {getStatusBadge(user.availableLast30)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -273,6 +248,7 @@ const AdminUserAverages = () => {
                   <div className="mb-3">
                     <p className="font-semibold text-base truncate">{user.username}</p>
                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Days: {user.daysConsidered || 0}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 mb-3">
@@ -282,7 +258,7 @@ const AdminUserAverages = () => {
                         <p className="text-xs text-muted-foreground">Deposits</p>
                       </div>
                       <p className="font-semibold text-sm text-green-500">
-                        ${user.depositsLast30.toFixed(2)}
+                        ${(user.depositsLastPeriod || 0).toFixed(2)}
                       </p>
                     </div>
 
@@ -292,7 +268,7 @@ const AdminUserAverages = () => {
                         <p className="text-xs text-muted-foreground">Withdrawals</p>
                       </div>
                       <p className="font-semibold text-sm text-red-500">
-                        ${user.withdrawalsLast30.toFixed(2)}
+                        ${(user.withdrawalsLastPeriod || 0).toFixed(2)}
                       </p>
                     </div>
 
@@ -302,29 +278,19 @@ const AdminUserAverages = () => {
                         <p className="text-xs text-muted-foreground">Bonuses</p>
                       </div>
                       <p className="font-semibold text-sm text-purple-500">
-                        ${user.bonusesLast30.toFixed(2)}
+                        ${(user.bonusesLastPeriod || 0).toFixed(2)}
                       </p>
                     </div>
 
                     <div className="bg-primary/10 border border-primary/30 rounded-lg p-2">
                       <div className="flex items-center gap-1 mb-1">
                         <DollarSign className="w-3 h-3 text-primary" />
-                        <p className="text-xs text-muted-foreground">Available</p>
+                        <p className="text-xs text-muted-foreground">Avg/Day</p>
                       </div>
-                      <p className={`font-semibold text-sm ${user.availableLast30 >= 0 ? 'text-primary' : 'text-red-500'}`}>
-                        ${user.availableLast30.toFixed(2)}
+                      <p className="font-semibold text-sm text-primary">
+                        ${(user.averagePerDay || 0).toFixed(2)}
                       </p>
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Delta/Day</p>
-                      <p className={`font-mono text-sm font-semibold ${user.deltaPerDay >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {user.deltaPerDay >= 0 ? '+' : ''}{user.deltaPerDay.toFixed(2)}
-                      </p>
-                    </div>
-                    {getStatusBadge(user.availableLast30)}
                   </div>
                 </Card>
               ))}
@@ -366,9 +332,7 @@ const AdminUserAverages = () => {
         <Card className="p-4 bg-muted/30 backdrop-blur-sm border border-border">
           <h4 className="text-sm font-semibold mb-2">Formula Reference</h4>
           <div className="text-xs text-muted-foreground space-y-1">
-            <p>• <strong>Available Last {days}</strong> = Deposits − Withdrawals − Bonuses (over {days} days)</p>
-            <p>• <strong>Delta Per Day</strong> = (Available Last {days} − {65 * days}) / {days}</p>
-            <p>• Baseline is calculated as 65 × {days} = {65 * days}</p>
+            <p>• <strong>Average Per Day</strong> = Total activity / Days considered (based on actual transaction history)</p>
             <p>• All amounts are calculated from approved deposits/withdrawals and completed bonus transactions</p>
           </div>
         </Card>
