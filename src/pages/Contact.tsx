@@ -77,7 +77,7 @@ const Contact = () => {
                   <div>
                     <p className="font-semibold mb-1">Phone Support</p>
                     <p className="text-sm text-muted-foreground">
-                      +62 21 3192 xxxx<br />
+                      +62 21 3192 5729<br />
                       Mon-Fri: 9:00 AM - 6:00 PM (WIB)
                     </p>
                   </div>
