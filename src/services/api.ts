@@ -97,11 +97,13 @@ export const userAPI = {
   getWithdrawals: () => api.get('/user/withdrawals'),
   createWithdrawal: (data) => api.post('/user/withdrawals', data),
   
-  // Transactions
-  getTransactions: () => api.get('/user/transactions'),
+  // Transactions (with pagination)
+  getTransactions: (params?: { page?: number; limit?: number }) => 
+    api.get('/user/transactions', { params }),
   
-  // Referrals
-  getReferrals: () => api.get('/user/referrals'),
+  // Referrals (with pagination)
+  getReferrals: (params?: { page?: number; limit?: number }) => 
+    api.get('/user/referrals', { params }),
   
   // Spin Wheel
   spinWheel: (data?: { reward: number }) => api.post('/user/spin-wheel', data),
