@@ -32,9 +32,14 @@ const Rewards = () => {
       // Fetch referrals
       const referralsRes = await userAPI.getReferrals();
       
+      // Handle both response formats: direct array or paginated response
+      const referralsData = Array.isArray(referralsRes.data) 
+        ? referralsRes.data 
+        : (referralsRes.data?.data || []);
+      
       // Count left and right team members
-      const leftCount = referralsRes.data.filter((ref: any) => ref.side === 'left').length;
-      const rightCount = referralsRes.data.filter((ref: any) => ref.side === 'right').length;
+      const leftCount = referralsData.filter((ref: any) => ref.side === 'left').length;
+      const rightCount = referralsData.filter((ref: any) => ref.side === 'right').length;
       
       setLeftTeamCount(leftCount);
       setRightTeamCount(rightCount);
