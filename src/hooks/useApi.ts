@@ -31,6 +31,7 @@ export const useProfile = () => {
     queryKey: queryKeys.profile,
     queryFn: async () => {
       const response = await authAPI.getProfile();
+      // Profile returns the user object directly (not wrapped in data)
       return response.data;
     },
     staleTime: defaultStaleTime,
@@ -55,7 +56,15 @@ export const useTransactions = (page = 1, limit = 20) => {
     queryKey: queryKeys.transactions(page, limit),
     queryFn: async () => {
       const response = await userAPI.getTransactions({ page, limit });
-      return response.data;
+      // Normalize response structure - handle both array and paginated responses
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData, // Keep previous data while fetching new page
@@ -67,7 +76,17 @@ export const useReferrals = (page = 1, limit = 50) => {
     queryKey: queryKeys.referrals(page, limit),
     queryFn: async () => {
       const response = await userAPI.getReferrals({ page, limit });
-      return response.data;
+      // Normalize response structure - handle both array and paginated responses
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        // Direct array response
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      // Paginated response with { data: [...], pagination: {...} }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData,
@@ -162,7 +181,9 @@ export const useAdminRecentTransactions = (limit = 5) => {
     queryKey: queryKeys.adminRecentTransactions(limit),
     queryFn: async () => {
       const response = await adminAPI.getRecentTransactions(limit);
-      return response.data;
+      // Returns an array of transactions directly
+      const responseData = response.data;
+      return Array.isArray(responseData) ? responseData : [];
     },
     staleTime: defaultStaleTime,
   });
@@ -173,7 +194,15 @@ export const useAdminUsers = (page = 1, limit = 20) => {
     queryKey: queryKeys.adminUsers(page, limit),
     queryFn: async () => {
       const response = await adminAPI.getAllUsers({ page, limit });
-      return response.data;
+      // Normalize response
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData,
@@ -185,7 +214,14 @@ export const useAdminTransactions = (page = 1, limit = 20) => {
     queryKey: queryKeys.adminTransactions(page, limit),
     queryFn: async () => {
       const response = await adminAPI.getAllTransactions({ page, limit });
-      return response.data;
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData,
@@ -197,7 +233,14 @@ export const useAdminDeposits = (page = 1, limit = 20) => {
     queryKey: queryKeys.adminDeposits(page, limit),
     queryFn: async () => {
       const response = await adminAPI.getAllDeposits({ page, limit });
-      return response.data;
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData,
@@ -209,7 +252,14 @@ export const useAdminWithdrawals = (page = 1, limit = 20) => {
     queryKey: queryKeys.adminWithdrawals(page, limit),
     queryFn: async () => {
       const response = await adminAPI.getAllWithdrawals({ page, limit });
-      return response.data;
+      const responseData = response.data;
+      if (Array.isArray(responseData)) {
+        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+      }
+      return {
+        data: Array.isArray(responseData?.data) ? responseData.data : [],
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+      };
     },
     staleTime: defaultStaleTime,
     placeholderData: keepPreviousData,
