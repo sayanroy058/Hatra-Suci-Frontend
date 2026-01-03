@@ -13,23 +13,54 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import BlockchainBackground from '@/components/BlockchainBackground';
 import SpinWheel from '@/components/SpinWheel';
-import { authAPI, userAPI } from '@/services/api';
+import { useProfile, useReferrals, useCheckLevelRewards } from '@/hooks/useApi';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showSpinWheel, setShowSpinWheel] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<any>(null);
-  const [referrals, setReferrals] = useState<any[]>([]);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [canSpin, setCanSpin] = useState(true);
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState('');
 
+  // Use React Query hooks
+  const { data: userData, isLoading: profileLoading, refetch: refetchProfile } = useProfile();
+  const { data: referralsData, isLoading: referralsLoading } = useReferrals(1, 50);
+  const checkLevelRewards = useCheckLevelRewards();
+
+  const loading = profileLoading || referralsLoading;
+  const referrals = referralsData?.data || [];
+
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (userData) {
+      checkSpinStatus(userData.spinWheelLastUsed);
+      
+      // Check for level rewards in background
+      checkLevelRewards.mutate(undefined, {
+        onSuccess: () => {
+          refetchProfile();
+        }
+      });
+      
+      // Calculate next target level
+      const achievedLevels = userData.achievedLevels || [];
+      if (achievedLevels.length > 0) {
+        const maxAchieved = Math.max(...achievedLevels);
+        setCurrentLevel(Math.min(maxAchieved + 1, 12));
+      } else {
+        setCurrentLevel(1);
+      }
+    }
+  }, [userData]);
 
   // Update countdown timer
   useEffect(() => {
@@ -96,70 +127,6 @@ const Dashboard = () => {
       setCanSpin(true);
     }
   };
-
-  const fetchUserData = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      const [profileRes, referralsRes] = await Promise.all([
-        authAPI.getProfile(),
-        userAPI.getReferrals()
-      ]);
-
-      setUserData(profileRes.data);
-      // Normalize referrals: assign default 'left' side when absent (legacy data)
-      const normalizedReferrals = referralsRes.data.map((ref: any) => ({
-        ...ref,
-        side: ref.side || 'left'
-      }));
-      setReferrals(normalizedReferrals);
-      
-      // Check spin status
-      checkSpinStatus(profileRes.data.spinWheelLastUsed);
-      
-      // Check for level rewards and refetch profile to get updated balance
-      try {
-        await userAPI.checkLevelRewards();
-        // Refetch profile to get updated balance and achievedLevels
-        const updatedProfile = await authAPI.getProfile();
-        setUserData(updatedProfile.data);
-        
-        // Calculate next target level: if user has achieved levels, set next level as current
-        const achievedLevels = updatedProfile.data.achievedLevels || [];
-        if (achievedLevels.length > 0) {
-          const maxAchieved = Math.max(...achievedLevels);
-          // Set next target level (maxAchieved + 1), capped at 12
-          setCurrentLevel(Math.min(maxAchieved + 1, 12));
-        } else {
-          // No levels achieved yet, start at level 1
-          setCurrentLevel(1);
-        }
-      } catch (error) {
-        console.error('Error checking level rewards:', error);
-        // Don't show error to user as this is a background check
-      }
-    } catch (error: any) {
-      console.error('Error fetching user data:', error);
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
-      }
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to load user data',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -453,7 +420,7 @@ const Dashboard = () => {
           onClose={() => setShowSpinWheel(false)} 
           onRewardClaimed={async () => {
             // Refresh user data to show updated balance and spin state
-            await fetchUserData();
+            await refetchProfile();
             
             // Immediately update spin state to disabled with midnight reset
             const now = new Date();

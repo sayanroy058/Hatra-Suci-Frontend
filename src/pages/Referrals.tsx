@@ -1,61 +1,38 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Send, User, Users, Activity } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Send, User, Users, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BlockchainBackground from '@/components/BlockchainBackground';
 import { toast } from '@/hooks/use-toast';
-import { authAPI, userAPI } from '@/services/api';
+import { useProfile, useReferrals, useCheckLevelRewards } from '@/hooks/useApi';
 
 const Referrals = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [referralCode, setReferralCode] = useState('');
-  const [referredUsers, setReferredUsers] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const limit = 50;
+
+  const { data: profileData } = useProfile();
+  const { data: referralsData, isLoading: loading } = useReferrals(page, limit);
+  const checkLevelRewards = useCheckLevelRewards();
+  
+  const referralCode = profileData?.referralCode || '';
+  const referrals = referralsData?.data || [];
+  const pagination = referralsData?.pagination || { currentPage: 1, totalPages: 1, total: 0 };
 
   useEffect(() => {
-    fetchData();
+    // Check for level rewards in the background
+    checkLevelRewards.mutate();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const [profileRes, referralsRes] = await Promise.all([
-        authAPI.getProfile(),
-        userAPI.getReferrals()
-      ]);
-
-      setReferralCode(profileRes.data.referralCode);
-      
-      // Map referrals with stored side from backend
-      const mapped = referralsRes.data.map((ref: any) => ({
-        id: ref._id,
-        user: ref.referred.username,
-        status: 'Approved',
-        date: new Date(ref.createdAt).toLocaleDateString(),
-        side: ref.side || 'left' // Use stored side from backend
-      }));
-      
-      setReferredUsers(mapped);
-      
-      // Check for level rewards
-      try {
-        await userAPI.checkLevelRewards();
-      } catch (error) {
-        console.error('Error checking level rewards:', error);
-        // Don't show error to user as this is a background check
-      }
-    } catch (error) {
-      console.error('Error fetching referrals:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to load referrals'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Map referrals with stored side from backend
+  const referredUsers = referrals.map((ref: any) => ({
+    id: ref._id,
+    user: ref.referred.username,
+    status: 'Approved',
+    date: new Date(ref.createdAt).toLocaleDateString(),
+    side: ref.side || 'left'
+  }));
 
   const leftTeam = referredUsers.filter(user => user.side === 'left');
   const rightTeam = referredUsers.filter(user => user.side === 'right');
@@ -242,6 +219,35 @@ const Referrals = () => {
             </div>
           </div>
         </div>
+
+        {/* Pagination */}
+        {!loading && pagination.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Previous
+            </Button>
+            
+            <span className="text-sm text-muted-foreground">
+              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.total} total)
+            </span>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+              disabled={page === pagination.totalPages}
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

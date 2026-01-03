@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { authAPI, userAPI, adminAPI } from '@/services/api';
 
 // Query keys
@@ -58,7 +58,7 @@ export const useTransactions = (page = 1, limit = 20) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true, // Keep previous data while fetching new page
+    placeholderData: keepPreviousData, // Keep previous data while fetching new page
   });
 };
 
@@ -70,7 +70,7 @@ export const useReferrals = (page = 1, limit = 50) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -176,7 +176,7 @@ export const useAdminUsers = (page = 1, limit = 20) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -188,7 +188,7 @@ export const useAdminTransactions = (page = 1, limit = 20) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -200,7 +200,7 @@ export const useAdminDeposits = (page = 1, limit = 20) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -212,7 +212,7 @@ export const useAdminWithdrawals = (page = 1, limit = 20) => {
       return response.data;
     },
     staleTime: defaultStaleTime,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 

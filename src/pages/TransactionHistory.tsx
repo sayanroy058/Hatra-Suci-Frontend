@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowDownToLine, ArrowUpFromLine, Gift, Calendar, Activity } from 'lucide-react';
+import { ArrowLeft, ArrowDownToLine, ArrowUpFromLine, Gift, Calendar, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import BlockchainBackground from '@/components/BlockchainBackground';
-import { userAPI } from '@/services/api';
-import { useToast } from '@/hooks/use-toast';
+import { useTransactions } from '@/hooks/useApi';
 
 interface Transaction {
   id: string;
@@ -17,30 +17,12 @@ interface Transaction {
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(true);
-  const [transactions, setTransactions] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const response = await userAPI.getTransactions();
-      setTransactions(response.data.data || response.data || []);
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to load transactions'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [page, setPage] = useState(1);
+  const limit = 20;
+  
+  const { data: transactionsData, isLoading: loading } = useTransactions(page, limit);
+  const transactions = transactionsData?.data || [];
+  const pagination = transactionsData?.pagination || { currentPage: 1, totalPages: 1, total: 0 };
 
   const depositTransactions: Transaction[] = transactions
     .filter(tx => tx.type === 'deposit')
@@ -108,7 +90,15 @@ const TransactionHistory = () => {
     }
   };
 
-  const TransactionList = ({ transactions, type }: { transactions: Transaction[], type: string }) => {
+  const TransactionList = ({ transactions, type, loading }: { transactions: Transaction[], type: string, loading: boolean }) => {
+    if (loading) {
+      return (
+        <div className="flex justify-center py-12">
+          <Activity className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+
     if (transactions.length === 0) {
       return (
         <div className="text-center py-12">
@@ -149,19 +139,8 @@ const TransactionHistory = () => {
           </Card>
         ))}
       </div>
-    );
-  };
-  if (loading) {
-    return (
-      <div className="min-h-screen relative flex items-center justify-center">
-        <BlockchainBackground />
-        <div className="relative z-10 text-center">
-          <Activity className="w-12 h-12 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-muted-foreground">Loading transactions...</p>
-        </div>
-      </div>
-    );
-  }
+    };
+  
   return (
     <div className="min-h-screen relative">
       <BlockchainBackground />
@@ -188,21 +167,50 @@ const TransactionHistory = () => {
           </TabsList>
 
           <TabsContent value="deposit">
-            <TransactionList transactions={depositTransactions} type="Deposit" />
+            <TransactionList transactions={depositTransactions} type="Deposit" loading={loading} />
           </TabsContent>
 
           <TabsContent value="withdraw">
-            <TransactionList transactions={withdrawTransactions} type="Withdraw" />
+            <TransactionList transactions={withdrawTransactions} type="Withdraw" loading={loading} />
           </TabsContent>
 
           <TabsContent value="bonus">
-            <TransactionList transactions={bonusTransactions} type="Bonus" />
+            <TransactionList transactions={bonusTransactions} type="Bonus" loading={loading} />
           </TabsContent>
 
           <TabsContent value="daily">
-            <TransactionList transactions={dailyRewardTransactions} type="Daily Reward" />
+            <TransactionList transactions={dailyRewardTransactions} type="Daily Reward" loading={loading} />
           </TabsContent>
         </Tabs>
+
+        {/* Pagination */}
+        {!loading && pagination.totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Previous
+            </Button>
+            
+            <span className="text-sm text-muted-foreground">
+              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.total} total)
+            </span>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
+              disabled={page === pagination.totalPages}
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
