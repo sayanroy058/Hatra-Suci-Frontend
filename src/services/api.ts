@@ -16,7 +16,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
-  timeout: 10000, // 10 seconds
+  timeout: 30000, // 30 seconds (increased for admin operations)
 });
 
 // Add token to requests
