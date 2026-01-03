@@ -157,40 +157,39 @@ const TransactionHistory = () => {
           <h1 className="text-xl font-semibold flex-1 text-center pr-8">Transaction History</h1>
         </header>
 
-        {/* Tabs */}
-        <Tabs defaultValue="deposit" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="deposit">Deposit</TabsTrigger>
-            <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-            <TabsTrigger value="bonus">Bonus</TabsTrigger>
-            <TabsTrigger value="daily">Daily</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="deposit">
-            <TransactionList transactions={depositTransactions} type="Deposit" loading={loading} />
-          </TabsContent>
-
-          <TabsContent value="withdraw">
-            <TransactionList transactions={withdrawTransactions} type="Withdraw" loading={loading} />
-          </TabsContent>
-
-          <TabsContent value="bonus">
-            <TransactionList transactions={bonusTransactions} type="Bonus" loading={loading} />
-          </TabsContent>
-
-          <TabsContent value="daily">
-            <TransactionList transactions={dailyRewardTransactions} type="Daily Reward" loading={loading} />
-          </TabsContent>
-        </Tabs>
-
-        {/* Pagination */}
-        {!loading && pagination.pages > 1 && (
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
+        return (
+          <div className="space-y-3">
+            {transactions.map((transaction) => (
+              <Card key={transaction.id} className="p-4 bg-card/90 backdrop-blur-sm border-2 border-border card-glow">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${getStatusBadge(transaction.status)}`}>
+                      {type === 'Deposit' && <ArrowDownToLine className="w-4 h-4 text-green-500" />}
+                      {type === 'Withdraw' && <ArrowUpFromLine className="w-4 h-4 text-red-500" />}
+                      {type === 'Bonus' && <Gift className="w-4 h-4 text-purple-500" />}
+                      {type === 'Daily Reward' && <Calendar className="w-4 h-4 text-blue-500" />}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm">{transaction.description}</p>
+                      <p className="text-xs text-muted-foreground">{transaction.date}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`font-bold ${type === 'Withdraw' ? 'text-red-500' : 'text-green-500'}`}>
+                      {type === 'Withdraw' ? '-' : '+'}{transaction.amount.toFixed(2)} Tokens
+                    </p>
+                    <p className={`text-xs font-medium uppercase ${getStatusColor(transaction.status)}`}>
+                      {transaction.status}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/50">
+                  <span>Transaction ID: {transaction.id}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        );
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
               Previous
