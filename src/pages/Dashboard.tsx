@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownCircle, ArrowUpCircle, Users, User, Settings, Gift, TrendingUp, LogOut, Activity, Diamond, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,7 @@ const Dashboard = () => {
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [referralPage, setReferralPage] = useState(1);
-  const referralLimit = 20;
+  const referralLimit = 5;
 
   // Use React Query hooks
   const { data: userData, isLoading: profileLoading, refetch: refetchProfile } = useProfile();
@@ -43,16 +43,22 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
+  // Track if level rewards check has been done to prevent duplicate calls
+  const levelRewardsCheckedRef = useRef(false);
+
   useEffect(() => {
     if (userData) {
       checkSpinStatus(userData.spinWheelLastUsed);
       
-      // Check for level rewards in background
-      checkLevelRewards.mutate(undefined, {
-        onSuccess: () => {
-          refetchProfile();
-        }
-      });
+      // Check for level rewards in background (only once)
+      if (!levelRewardsCheckedRef.current) {
+        levelRewardsCheckedRef.current = true;
+        checkLevelRewards.mutate(undefined, {
+          onSuccess: () => {
+            refetchProfile();
+          }
+        });
+      }
       
       // Calculate next target level
       const achievedLevels = userData.achievedLevels || [];
@@ -63,7 +69,7 @@ const Dashboard = () => {
         setCurrentLevel(1);
       }
     }
-  }, [userData]);
+  }, [userData, checkLevelRewards, refetchProfile]);
 
   // Update countdown timer
   useEffect(() => {

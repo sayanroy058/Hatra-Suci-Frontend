@@ -10,7 +10,7 @@ const Referrals = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [page, setPage] = useState(1);
-  const limit = 50;
+  const limit = 10;
 
   const { data: profileData } = useProfile();
   const { data: referralsData, isLoading: loading } = useReferrals(page, limit);
@@ -21,8 +21,9 @@ const Referrals = () => {
   const pagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
 
   useEffect(() => {
-    // Check for level rewards in the background
+    // Check for level rewards in the background (only once on mount)
     checkLevelRewards.mutate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Map referrals with stored side from backend
