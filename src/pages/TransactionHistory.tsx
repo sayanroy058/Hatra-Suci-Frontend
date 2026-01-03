@@ -22,7 +22,7 @@ const TransactionHistory = () => {
   
   const { data: transactionsData, isLoading: loading } = useTransactions(page, limit);
   const transactions = transactionsData?.data || [];
-  const pagination = transactionsData?.pagination || { currentPage: 1, totalPages: 1, total: 0 };
+  const pagination = transactionsData?.pagination || { page: 1, pages: 1, total: 0 };
 
   const depositTransactions: Transaction[] = transactions
     .filter(tx => tx.type === 'deposit')
@@ -184,7 +184,7 @@ const TransactionHistory = () => {
         </Tabs>
 
         {/* Pagination */}
-        {!loading && pagination.totalPages > 1 && (
+        {!loading && pagination.pages > 1 && (
           <div className="flex items-center justify-center gap-4 mt-6">
             <Button
               variant="outline"
@@ -197,14 +197,14 @@ const TransactionHistory = () => {
             </Button>
             
             <span className="text-sm text-muted-foreground">
-              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.total} total)
+              Page {pagination.page} of {pagination.pages} ({pagination.total} total)
             </span>
             
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
-              disabled={page === pagination.totalPages}
+              onClick={() => setPage(p => Math.min(pagination.pages, p + 1))}
+              disabled={page === pagination.pages}
             >
               Next
               <ChevronRight className="w-4 h-4 ml-1" />

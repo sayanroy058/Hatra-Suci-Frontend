@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownCircle, ArrowUpCircle, Users, User, Settings, Gift, TrendingUp, LogOut, Activity, Diamond } from 'lucide-react';
+import { ArrowDownCircle, ArrowUpCircle, Users, User, Settings, Gift, TrendingUp, LogOut, Activity, Diamond, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,14 +23,17 @@ const Dashboard = () => {
   const [canSpin, setCanSpin] = useState(true);
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [referralPage, setReferralPage] = useState(1);
+  const referralLimit = 20;
 
   // Use React Query hooks
   const { data: userData, isLoading: profileLoading, refetch: refetchProfile } = useProfile();
-  const { data: referralsData, isLoading: referralsLoading } = useReferrals(1, 50);
+  const { data: referralsData, isLoading: referralsLoading } = useReferrals(referralPage, referralLimit);
   const checkLevelRewards = useCheckLevelRewards();
 
   const loading = profileLoading || referralsLoading;
   const referrals = referralsData?.data || [];
+  const referralPagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -393,7 +396,7 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {referrals.slice(0, 5).map((ref: any) => (
+                  {referrals.map((ref: any) => (
                     <tr key={ref._id} className="border-b border-border/50 last:border-0">
                       <td className="py-3">{ref.referred?.username || 'Unknown'}</td>
                       <td className="py-3 text-muted-foreground text-sm">
@@ -403,13 +406,39 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
-              {referrals.length > 5 && (
-                <div className="mt-4 text-center">
-                  <Button variant="outline" size="sm" onClick={() => navigate('/referrals')}>
-                    View All Referrals
-                  </Button>
+              
+              {/* Pagination Controls */}
+              {referralPagination.pages > 1 && (
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+                  <span className="text-sm text-muted-foreground">
+                    Page {referralPagination.page} of {referralPagination.pages} ({referralPagination.total} total)
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setReferralPage(p => Math.max(1, p - 1))}
+                      disabled={referralPage === 1 || referralsLoading}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setReferralPage(p => Math.min(referralPagination.pages, p + 1))}
+                      disabled={referralPage >= referralPagination.pages || referralsLoading}
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               )}
+              
+              <div className="mt-3 text-center">
+                <Button variant="outline" size="sm" onClick={() => navigate('/referrals')}>
+                  View Full Referrals Page
+                </Button>
+              </div>
             </div>
           )}
         </div>

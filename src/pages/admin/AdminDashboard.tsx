@@ -15,14 +15,31 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/AdminLayout';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { adminAPI } from '@/services/api';
+import { useEffect } from 'react';
+import { useAdminStats, useAdminRecentTransactions } from '@/hooks/useApi';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [stats, setStats] = useState({
+  
+  // Use React Query hooks for data fetching with caching
+  const { 
+    data: statsData, 
+    isLoading: statsLoading, 
+    error: statsError,
+    refetch: refetchStats 
+  } = useAdminStats();
+  
+  const { 
+    data: transactionsData, 
+    isLoading: transactionsLoading, 
+    error: transactionsError 
+  } = useAdminRecentTransactions(5);
+
+  const loading = statsLoading || transactionsLoading;
+  const error = statsError || transactionsError;
+  
+  // Derive stats with defaults
+  const stats = statsData || {
     totalUsers: 0,
     activeUsers: 0,
     totalDeposits: 0,
@@ -30,8 +47,17 @@ const AdminDashboard = () => {
     pendingDeposits: 0,
     pendingWithdrawals: 0,
     pendingRegistrations: 0
-  });
-  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  };
+  
+  // Map recent transactions
+  const recentActivity = (transactionsData || []).map((tx: any) => ({
+    id: tx._id || 'unknown',
+    type: tx.type || 'unknown',
+    user: tx.user?.username || 'Unknown',
+    amount: tx.amount || 0,
+    status: tx.status || 'pending',
+    time: tx.createdAt ? new Date(tx.createdAt).toLocaleString() : 'N/A'
+  }));
 
   useEffect(() => {
     // Check if user is logged in and is admin
@@ -53,53 +79,7 @@ const AdminDashboard = () => {
       navigate('/login');
       return;
     }
-
-    fetchDashboardData();
   }, [navigate]);
-
-  // Fetch dashboard data from the backend
-  // Limit recent activity to last 5 items by requesting 5 from the backend
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      console.log('Fetching dashboard data...');
-      const [statsRes, transactionsRes] = await Promise.all([
-        adminAPI.getDashboardStats(),
-        adminAPI.getRecentTransactions(5)
-      ]);
-
-      console.log('Stats:', statsRes.data);
-      console.log('Transactions:', transactionsRes.data);
-
-      setStats(statsRes.data);
-      
-      // Map recent transactions (already limited by backend request)
-      const recent = transactionsRes.data.map((tx: any) => ({
-        id: tx._id || 'unknown',
-        type: tx.type || 'unknown',
-        user: tx.user?.username || 'Unknown',
-        amount: tx.amount || 0,
-        status: tx.status || 'pending',
-        time: tx.createdAt ? new Date(tx.createdAt).toLocaleString() : 'N/A'
-      }));
-      setRecentActivity(recent);
-    } catch (error: any) {
-      console.error('Error fetching dashboard data:', error);
-      console.error('Error response:', error.response);
-      setError(error.response?.data?.message || error.message || 'Failed to load dashboard data');
-      
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -166,14 +146,15 @@ const AdminDashboard = () => {
   };
 
   if (error && !loading) {
+    const errorMessage = (error as any)?.message || 'Failed to load dashboard data';
     return (
       <AdminLayout title="Dashboard">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <XCircle className="w-12 h-12 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-semibold mb-2">Error Loading Dashboard</p>
-            <p className="text-muted-foreground mb-4">{error}</p>
-            <Button onClick={fetchDashboardData}>Try Again</Button>
+            <p className="text-muted-foreground mb-4">{errorMessage}</p>
+            <Button onClick={() => refetchStats()}>Try Again</Button>
           </div>
         </div>
       </AdminLayout>

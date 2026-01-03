@@ -18,7 +18,7 @@ const Referrals = () => {
   
   const referralCode = profileData?.referralCode || '';
   const referrals = referralsData?.data || [];
-  const pagination = referralsData?.pagination || { currentPage: 1, totalPages: 1, total: 0 };
+  const pagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
 
   useEffect(() => {
     // Check for level rewards in the background
@@ -221,7 +221,7 @@ const Referrals = () => {
         </div>
 
         {/* Pagination */}
-        {!loading && pagination.totalPages > 1 && (
+        {!loading && pagination.pages > 1 && (
           <div className="flex items-center justify-center gap-4 mt-6">
             <Button
               variant="outline"
@@ -234,14 +234,14 @@ const Referrals = () => {
             </Button>
             
             <span className="text-sm text-muted-foreground">
-              Page {pagination.currentPage} of {pagination.totalPages} ({pagination.total} total)
+              Page {pagination.page} of {pagination.pages} ({pagination.total} total)
             </span>
             
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
-              disabled={page === pagination.totalPages}
+              onClick={() => setPage(p => Math.min(pagination.pages, p + 1))}
+              disabled={page === pagination.pages}
             >
               Next
               <ChevronRight className="w-4 h-4 ml-1" />
