@@ -339,13 +339,13 @@ const AdminUsers = () => {
                             Activate User
                           </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem 
+                        {/* <DropdownMenuItem 
                           onClick={() => handleBanUser(user)}
                           className={user.status === 'banned' ? 'text-green-500' : 'text-red-500'}
                         >
                           <Ban className="w-4 h-4 mr-2" />
                           {user.status === 'banned' ? 'Unban User' : 'Ban User'}
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </td>
@@ -418,13 +418,13 @@ const AdminUsers = () => {
                       Activate User
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem 
+                  {/* <DropdownMenuItem 
                     onClick={() => handleBanUser(user)}
                     className={user.status === 'banned' ? 'text-green-500' : 'text-red-500'}
                   >
                     <Ban className="w-4 h-4 mr-2" />
                     {user.status === 'banned' ? 'Unban User' : 'Ban User'}
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -569,7 +569,7 @@ const AdminUsers = () => {
                     Activate User
                   </Button>
                 )}
-                <Button 
+                {/* <Button 
                   variant={selectedUser.status === 'banned' ? 'default' : 'destructive'}
                   className="flex-1 gap-2"
                   onClick={() => {
@@ -579,7 +579,7 @@ const AdminUsers = () => {
                 >
                   <Ban className="w-4 h-4" />
                   {selectedUser.status === 'banned' ? 'Unban User' : 'Ban User'}
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}
