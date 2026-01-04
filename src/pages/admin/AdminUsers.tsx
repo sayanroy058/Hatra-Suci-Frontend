@@ -75,10 +75,10 @@ const AdminUsers = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await adminAPI.getAllUsers({ page: currentPage, limit: 50 });
+      const response = await adminAPI.getAllUsers({ page: currentPage, limit: 10 });
       
       const formattedUsers = response.data.data.map((user: any, index: number) => ({
-        id: (currentPage - 1) * 50 + index + 1,
+        id: (currentPage - 1) * 10 + index + 1,
         username: user.username,
         email: user.email,
         phone: user.phone || 'N/A',
