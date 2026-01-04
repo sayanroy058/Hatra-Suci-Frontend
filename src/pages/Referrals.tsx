@@ -20,7 +20,6 @@ const Referrals = () => {
   const referrals = referralsData?.data || [];
   const pagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
   const teamCounts = referralsData?.teamCounts || { left: 0, right: 0 };
-  const teamCounts = referralsData?.teamCounts || { left: 0, right: 0 };
 
   useEffect(() => {
     // Check for level rewards in the background (only once on mount)
