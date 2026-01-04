@@ -142,7 +142,7 @@ const Index = () => {
               </div>
               <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg p-3 sm:p-4">
                 <Users className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2" />
-                <p className="text-xl sm:text-2xl font-bold text-gradient-gold">50K+</p>
+                <p className="text-xl sm:text-2xl font-bold text-gradient-gold">5M+</p>
                 <p className="text-xs sm:text-sm text-muted-foreground">Active Users</p>
               </div>
               <div className="bg-card/90 backdrop-blur-sm border border-border rounded-lg p-3 sm:p-4">

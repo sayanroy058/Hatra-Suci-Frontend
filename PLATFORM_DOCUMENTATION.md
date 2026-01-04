@@ -147,7 +147,7 @@ Hatra Suci is a comprehensive blockchain-based investment and rewards platform w
 ### Homepage (/)
 - Navigation header with links to About, CEO, Contact, Login, Register
 - Hero section with company tagline
-- Quick stats display (20+ years, 15+ countries, 50K+ users, $10M+ rewards)
+- Quick stats display (20+ years, 15+ countries, 5M+ users, $10M+ rewards)
 - Core industries showcase
 - Why Choose Us section
 - CTA section with registration and contact buttons

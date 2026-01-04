@@ -157,7 +157,7 @@ const CEO = () => {
             </div>
 
             <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-5">
-              <div className="text-3xl font-bold text-green-500 mb-2">50K+</div>
+              <div className="text-3xl font-bold text-green-500 mb-2">5M+</div>
               <p className="font-semibold mb-1">Active Platform Users</p>
               <p className="text-sm text-muted-foreground">Growing digital community</p>
             </div>
