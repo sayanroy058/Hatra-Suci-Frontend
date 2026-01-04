@@ -14,10 +14,12 @@ import { useToast } from '@/hooks/use-toast';
 import BlockchainBackground from '@/components/BlockchainBackground';
 import SpinWheel from '@/components/SpinWheel';
 import { useProfile, useReferrals, useCheckLevelRewards } from '@/hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showSpinWheel, setShowSpinWheel] = useState(false);
   const [currentLevel, setCurrentLevel] = useState<number | null>(null);
   const [canSpin, setCanSpin] = useState(true);
@@ -137,6 +139,8 @@ const Dashboard = () => {
     }
   };
   const handleLogout = () => {
+    // Clear React Query cache to prevent showing old user data
+    queryClient.clear();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     toast({

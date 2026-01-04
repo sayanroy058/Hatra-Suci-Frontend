@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
+import { useNavigate, useLocation } from 'react-router-dom';import { useQueryClient } from '@tanstack/react-query';import { 
   LayoutDashboard, 
   Users, 
   ArrowDownCircle, 
@@ -27,6 +26,7 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children, title }: AdminLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
@@ -43,6 +43,8 @@ const AdminLayout = ({ children, title }: AdminLayoutProps) => {
   ];
 
   const handleLogout = () => {
+    // Clear React Query cache to prevent showing old user data
+    queryClient.clear();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     navigate('/admin/login');
