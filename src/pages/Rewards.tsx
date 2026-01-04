@@ -171,7 +171,7 @@ const Rewards = () => {
         {/* Info Box */}
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
           <p className="text-sm text-blue-400">
-            <span className="font-semibold">Note:</span> Complete the required left (L) and right (R) team members to unlock each level reward. Level 0 has no rewards. All amounts are in USD (90 INR = 1 USD).
+            <span className="font-semibold">Note:</span> Complete the required left (L) and right (R) team members to unlock each level reward. Level 0 has no rewards. All amounts are in USD.
           </p>
         </div>
 
