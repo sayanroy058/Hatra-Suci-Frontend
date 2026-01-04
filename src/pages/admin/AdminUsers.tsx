@@ -577,7 +577,7 @@ const AdminUsers = () => {
                     setShowUserModal(false);
                   }}
                 >
-                  <Ban className="w-4 h-4" />
+                  <Ban className="w-4 h-4 text-muted-foreground" />
                   {selectedUser.status === 'banned' ? 'Unban User' : 'Ban User'}
                 </Button>
               </div>
