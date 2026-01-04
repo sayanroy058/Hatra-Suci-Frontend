@@ -19,7 +19,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showSpinWheel, setShowSpinWheel] = useState(false);
-  const [currentLevel, setCurrentLevel] = useState(1);
+  const [currentLevel, setCurrentLevel] = useState<number | null>(null);
   const [canSpin, setCanSpin] = useState(true);
   const [nextSpinTime, setNextSpinTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -49,7 +49,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (userData) {
       checkSpinStatus(userData.spinWheelLastUsed);
-      
+
       // Check for level rewards in background (only once)
       if (!levelRewardsCheckedRef.current) {
         levelRewardsCheckedRef.current = true;
@@ -59,7 +59,7 @@ const Dashboard = () => {
           }
         });
       }
-      
+
       // Calculate next target level
       const achievedLevels = userData.achievedLevels || [];
       if (achievedLevels.length > 0) {
@@ -78,18 +78,18 @@ const Dashboard = () => {
     const updateTimer = () => {
       const now = new Date();
       const diff = nextSpinTime.getTime() - now.getTime();
-      
+
       if (diff <= 0) {
         setCanSpin(true);
         setTimeRemaining('');
         setNextSpinTime(null);
         return;
       }
-      
+
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
+
       setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
     };
 
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
   const checkSpinStatus = (spinWheelLastUsed: any) => {
     const now = new Date();
-    
+
     // Check if today is Sunday (day 0) - scratch cards not available on Sundays
     if (now.getDay() === 0) {
       setCanSpin(false);
@@ -112,22 +112,22 @@ const Dashboard = () => {
       setNextSpinTime(nextMonday);
       return;
     }
-    
+
     if (!spinWheelLastUsed) {
       setCanSpin(true);
       return;
     }
 
     const lastSpin = new Date(spinWheelLastUsed);
-    
+
     // Calculate start of today (midnight)
     const startOfToday = new Date(now);
     startOfToday.setHours(0, 0, 0, 0);
-    
+
     // Calculate start of tomorrow (next midnight)
     const startOfTomorrow = new Date(startOfToday);
     startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
-    
+
     // Check if last spin was today (same calendar day)
     if (lastSpin >= startOfToday) {
       setCanSpin(false);
@@ -165,7 +165,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen relative">
       <BlockchainBackground />
-      
+
       <div className="relative z-10 p-4 max-w-2xl mx-auto">
         {/* Header */}
         <header className="flex items-center justify-between mb-6">
@@ -219,27 +219,27 @@ const Dashboard = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <Button 
-            variant="action" 
-            size="lg" 
+          <Button
+            variant="action"
+            size="lg"
             className="flex-col h-auto py-4"
             onClick={() => navigate('/deposit')}
           >
             <ArrowDownCircle className="w-6 h-6 text-primary mb-1" />
             <span>Deposit</span>
           </Button>
-          <Button 
-            variant="action" 
-            size="lg" 
+          <Button
+            variant="action"
+            size="lg"
             className="flex-col h-auto py-4"
             onClick={() => navigate('/withdraw')}
           >
             <ArrowUpCircle className="w-6 h-6 text-accent mb-1" />
             <span>Withdraw</span>
           </Button>
-          <Button 
-            variant="action" 
-            size="lg" 
+          <Button
+            variant="action"
+            size="lg"
             className="flex-col h-auto py-4"
             onClick={() => navigate('/referrals')}
           >
@@ -258,8 +258,8 @@ const Dashboard = () => {
               {canSpin ? 'Spin & Win Exciting Rewards!' : `Next reward in: ${timeRemaining}`}
             </p>
           </div>
-          <Button 
-            variant="gold" 
+          <Button
+            variant="gold"
             onClick={() => setShowSpinWheel(true)}
             disabled={!canSpin}
           >
@@ -275,12 +275,19 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold">Level Rewards & Offers</h3>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 bg-primary/20 px-3 py-1 rounded-full">
-                <TrendingUp className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold">Level {currentLevel}</span>
-              </div>
-              <Button 
-                variant="outline" 
+              {loading || currentLevel === null ? (
+                <div className="flex items-center gap-2 bg-muted/50 px-3 py-1 rounded-full animate-pulse">
+                  <Activity className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm font-semibold text-muted-foreground">Loading...</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 bg-primary/20 px-3 py-1 rounded-full">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold">Level {currentLevel}</span>
+                </div>
+              )}
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => navigate('/rewards')}
               >
@@ -290,56 +297,62 @@ const Dashboard = () => {
           </div>
 
           {/* Current Level Progress */}
-          <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/30 rounded-lg p-4 mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Current Progress</span>
-              <span className="text-xs text-muted-foreground">Level {currentLevel}</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div className="bg-card/50 rounded-lg p-2 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Left Team</p>
-                <p className="text-lg font-bold text-primary">
-                  {referrals.filter((r: any) => r.side === 'left').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].leftRequired : 'N/A'}
-                </p>
-              </div>
-              <div className="bg-card/50 rounded-lg p-2 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Right Team</p>
-                <p className="text-lg font-bold text-accent">
-                  {referrals.filter((r: any) => r.side === 'right').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].rightRequired : 'N/A'}
-                </p>
+          {loading || currentLevel === null ? (
+            <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/30 rounded-lg p-4 mb-4">
+              <div className="flex justify-center py-4">
+                <Activity className="w-6 h-6 animate-spin text-primary" />
               </div>
             </div>
-            {currentLevel < levelRewards.length && levelRewards[currentLevel].rank && (
-              <div className="bg-card/50 rounded-lg p-2 text-center">
-                <p className="text-xs text-muted-foreground mb-1">Current Rank</p>
-                <p className="text-lg font-bold text-gradient-gold">{levelRewards[currentLevel].rank}</p>
+          ) : (
+            <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/30 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Current Progress</span>
+                <span className="text-xs text-muted-foreground">Level {currentLevel}</span>
               </div>
-            )}
-          </div>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="bg-card/50 rounded-lg p-2 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Left Team</p>
+                  <p className="text-lg font-bold text-primary">
+                    {referrals.filter((r: any) => r.side === 'left').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].leftRequired : 'N/A'}
+                  </p>
+                </div>
+                <div className="bg-card/50 rounded-lg p-2 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Right Team</p>
+                  <p className="text-lg font-bold text-accent">
+                    {referrals.filter((r: any) => r.side === 'right').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].rightRequired : 'N/A'}
+                  </p>
+                </div>
+              </div>
+              {currentLevel < levelRewards.length && levelRewards[currentLevel].rank && (
+                <div className="bg-card/50 rounded-lg p-2 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Current Rank</p>
+                  <p className="text-lg font-bold text-gradient-gold">{levelRewards[currentLevel].rank}</p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Rewards List */}
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {levelRewards.slice(1).map((level) => {
-              const isCurrentLevel = level.level === currentLevel;
-              const isCompleted = level.level < currentLevel;
-              
+              const isCurrentLevel = currentLevel !== null && level.level === currentLevel;
+              const isCompleted = currentLevel !== null && level.level < currentLevel;
+
               return (
-                <div 
+                <div
                   key={level.level}
-                  className={`border rounded-lg p-3 transition-all ${
-                    isCurrentLevel 
-                      ? 'border-primary bg-primary/5 shadow-md' 
-                      : isCompleted
+                  className={`border rounded-lg p-3 transition-all ${isCurrentLevel
+                    ? 'border-primary bg-primary/5 shadow-md'
+                    : isCompleted
                       ? 'border-green-500/50 bg-green-500/5'
                       : 'border-border bg-card/50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`font-bold ${
-                          isCurrentLevel ? 'text-primary' : isCompleted ? 'text-green-500' : 'text-muted-foreground'
-                        }`}>
+                        <span className={`font-bold ${isCurrentLevel ? 'text-primary' : isCompleted ? 'text-green-500' : 'text-muted-foreground'
+                          }`}>
                           Level {level.level}
                         </span>
                         {isCurrentLevel && (
@@ -412,7 +425,7 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
-              
+
               {/* Pagination Controls */}
               {referralPagination.pages > 1 && (
                 <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
@@ -439,7 +452,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="mt-3 text-center">
                 <Button variant="outline" size="sm" onClick={() => navigate('/referrals')}>
                   View Full Referrals Page
@@ -451,12 +464,12 @@ const Dashboard = () => {
       </div>
 
       {showSpinWheel && (
-        <SpinWheel 
-          onClose={() => setShowSpinWheel(false)} 
+        <SpinWheel
+          onClose={() => setShowSpinWheel(false)}
           onRewardClaimed={async () => {
             // Refresh user data to show updated balance and spin state
             await refetchProfile();
-            
+
             // Immediately update spin state to disabled with midnight reset
             const now = new Date();
             const startOfTomorrow = new Date(now);
