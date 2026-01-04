@@ -79,13 +79,20 @@ export const useReferrals = (page = 1, limit = 50) => {
       // Normalize response structure - handle both array and paginated responses
       const responseData = response.data;
       if (Array.isArray(responseData)) {
-        // Direct array response
-        return { data: responseData, pagination: { page: 1, pages: 1, total: responseData.length } };
+        // Direct array response - calculate team counts from data
+        const leftCount = responseData.filter((ref: any) => ref.side === 'left').length;
+        const rightCount = responseData.filter((ref: any) => ref.side === 'right').length;
+        return { 
+          data: responseData, 
+          pagination: { page: 1, pages: 1, total: responseData.length },
+          teamCounts: { left: leftCount, right: rightCount }
+        };
       }
-      // Paginated response with { data: [...], pagination: {...} }
+      // Paginated response with { data: [...], pagination: {...}, teamCounts: {...} }
       return {
         data: Array.isArray(responseData?.data) ? responseData.data : [],
-        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 }
+        pagination: responseData?.pagination || { page: 1, pages: 1, total: 0 },
+        teamCounts: responseData?.teamCounts || { left: 0, right: 0 }
       };
     },
     staleTime: defaultStaleTime,

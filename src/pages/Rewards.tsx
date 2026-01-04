@@ -37,9 +37,10 @@ const Rewards = () => {
         ? referralsRes.data 
         : (referralsRes.data?.data || []);
       
-      // Count left and right team members
-      const leftCount = referralsData.filter((ref: any) => ref.side === 'left').length;
-      const rightCount = referralsData.filter((ref: any) => ref.side === 'right').length;
+      // Get team counts from API response if available, otherwise calculate from data
+      const teamCounts = referralsRes.data?.teamCounts;
+      const leftCount = teamCounts ? teamCounts.left : referralsData.filter((ref: any) => ref.side === 'left').length;
+      const rightCount = teamCounts ? teamCounts.right : referralsData.filter((ref: any) => ref.side === 'right').length;
       
       setLeftTeamCount(leftCount);
       setRightTeamCount(rightCount);

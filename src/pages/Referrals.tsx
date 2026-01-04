@@ -19,6 +19,8 @@ const Referrals = () => {
   const referralCode = profileData?.referralCode || '';
   const referrals = referralsData?.data || [];
   const pagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
+  const teamCounts = referralsData?.teamCounts || { left: 0, right: 0 };
+  const teamCounts = referralsData?.teamCounts || { left: 0, right: 0 };
 
   useEffect(() => {
     // Check for level rewards in the background (only once on mount)
@@ -35,6 +37,7 @@ const Referrals = () => {
     side: ref.side || 'left'
   }));
 
+  // Use current page data for display
   const leftTeam = referredUsers.filter(user => user.side === 'left');
   const rightTeam = referredUsers.filter(user => user.side === 'right');
 
@@ -95,12 +98,12 @@ const Referrals = () => {
             <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 text-center">
               <Users className="w-5 h-5 text-primary mx-auto mb-1" />
               <p className="text-xs text-muted-foreground mb-1">Left Team</p>
-              <p className="text-2xl font-bold text-primary">{leftTeam.length}</p>
+              <p className="text-2xl font-bold text-primary">{teamCounts.left}</p>
             </div>
             <div className="bg-accent/10 border border-accent/30 rounded-lg p-3 text-center">
               <Users className="w-5 h-5 text-accent mx-auto mb-1" />
               <p className="text-xs text-muted-foreground mb-1">Right Team</p>
-              <p className="text-2xl font-bold text-accent">{rightTeam.length}</p>
+              <p className="text-2xl font-bold text-accent">{teamCounts.right}</p>
             </div>
           </div>
         </div>

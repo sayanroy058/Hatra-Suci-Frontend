@@ -36,6 +36,11 @@ const Dashboard = () => {
   const loading = profileLoading || referralsLoading;
   const referrals = referralsData?.data || [];
   const referralPagination = referralsData?.pagination || { page: 1, pages: 1, total: 0 };
+  const teamCounts = referralsData?.teamCounts || { left: 0, right: 0 };
+
+  const balance = userData?.balance || 0;
+  const referralCode = userData?.referralCode || '';
+  const currentLevelValue = userData?.currentLevel || 1;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -317,13 +322,13 @@ const Dashboard = () => {
                 <div className="bg-card/50 rounded-lg p-2 text-center">
                   <p className="text-xs text-muted-foreground mb-1">Left Team</p>
                   <p className="text-lg font-bold text-primary">
-                    {referrals.filter((r: any) => r.side === 'left').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].leftRequired : 'N/A'}
+                    {teamCounts.left} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].leftRequired : 'N/A'}
                   </p>
                 </div>
                 <div className="bg-card/50 rounded-lg p-2 text-center">
                   <p className="text-xs text-muted-foreground mb-1">Right Team</p>
                   <p className="text-lg font-bold text-accent">
-                    {referrals.filter((r: any) => r.side === 'right').length} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].rightRequired : 'N/A'}
+                    {teamCounts.right} / {currentLevel < levelRewards.length ? levelRewards[currentLevel].rightRequired : 'N/A'}
                   </p>
                 </div>
               </div>
