@@ -264,56 +264,81 @@ const Index = () => {
         {/* Footer */}
         <footer className="py-8 sm:py-12 px-4 border-t border-border bg-card/50">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
-              <div className="text-center sm:text-left">
-                <h3 className="text-lg sm:text-xl font-bold text-gradient-gold mb-3 sm:mb-4">Hatra Suci</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  Indonesia's trusted global enterprise in natural resources and blockchain finance.
-                </p>
-              </div>
+            {/* Company Info - Full Width */}
+            <div className="text-center mb-8 sm:mb-10">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gradient-gold mb-3">Hatra Suci</h3>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+                Indonesia's trusted global enterprise in natural resources and blockchain finance.
+              </p>
+            </div>
 
-              <div className="text-center sm:text-left">
-                <h4 className="font-semibold mb-3 sm:mb-4">Company</h4>
-                <div className="space-y-2">
-                  <button onClick={() => navigate('/about')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    About Us
-                  </button>
-                  <button onClick={() => navigate('/ceo')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Leadership
-                  </button>
-                  <button onClick={() => navigate('/contact')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Contact
-                  </button>
+            {/* Two Column Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8 sm:mb-10">
+              {/* Left Column - Company & Platform Links */}
+              <div className="space-y-6 sm:space-y-8">
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 text-primary">Company</h4>
+                  <div className="space-y-3">
+                    <button onClick={() => navigate('/about')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      About Us
+                    </button>
+                    <button onClick={() => navigate('/ceo')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      Leadership
+                    </button>
+                    <button onClick={() => navigate('/contact')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      Contact
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-lg mb-4 text-primary">Platform</h4>
+                  <div className="space-y-3">
+                    <button onClick={() => navigate('/login')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      Login
+                    </button>
+                    <button onClick={() => navigate('/register')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      Register
+                    </button>
+                    <button onClick={() => navigate('/dashboard')} className="block text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors">
+                      Dashboard
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <div className="text-center sm:text-left">
-                <h4 className="font-semibold mb-3 sm:mb-4">Platform</h4>
-                <div className="space-y-2">
-                  <button onClick={() => navigate('/login')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Login
-                  </button>
-                  <button onClick={() => navigate('/register')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Register
-                  </button>
-                  <button onClick={() => navigate('/dashboard')} className="block w-full sm:w-auto text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                    Dashboard
-                  </button>
-                </div>
-              </div>
-
-              <div className="text-center sm:text-left">
-                <h4 className="font-semibold mb-3 sm:mb-4">Contact</h4>
-                <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
-                  <p>Jakarta, Indonesia</p>
-                  <p className="break-words">support@hatrasuci.co.id</p>
-                  <a href="https://t.me/HatraSuciSupport" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline transition-colors">
-                    Telegram Support
-                  </a>
+              {/* Right Column - Contact Info */}
+              <div>
+                <h4 className="font-semibold text-lg mb-4 text-primary">Contact</h4>
+                <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <p>Jakarta, Indonesia</p>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <p className="break-all">support@hatrasuci.co.id</p>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.68-.52.36-.99.53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.48 1.03-.73 4.04-1.76 6.73-2.92 8.08-3.49 3.85-1.62 4.65-1.9 5.17-1.91.11 0 .37.03.54.17.14.11.18.26.2.37-.01.06.01.24 0 .38z"/>
+                    </svg>
+                    <a href="https://t.me/HatraSuciSupport" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-colors">
+                      Telegram Support
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Copyright */}
             <div className="pt-6 sm:pt-8 border-t border-border text-center text-xs sm:text-sm text-muted-foreground">
               <p>© 2025 Hatra Suci. All rights reserved.</p>
             </div>
